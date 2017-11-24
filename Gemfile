@@ -1,9 +1,8 @@
-# A sample Gemfile
 source "https://rubygems.org"
 
-ruby "2.2.4"
+ruby "2.1.2"
 
-# gem "rails"
-gem 'sinatra'
-gem 'sinatra-websocket'
-gem 'pry'
+gem "faye-websocket"
+gem "sinatra"
+gem "puma"
+gem "redis"

@@ -1,2 +1,6 @@
 require './app'
-run Sinatra::Application
+require './middlewares/chat_backend'
+
+use ChatDemo::ChatBackend
+
+run ChatDemo::App
