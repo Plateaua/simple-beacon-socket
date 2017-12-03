@@ -1,9 +1,24 @@
 var scheme   = "<%= @scheme %>";
 var uri      = scheme + window.document.location.host + "/";
 var ws       = new WebSocket(uri);
+var serviceToken = "";
+var data     = {};
+
+$("#service-token-form").on("submit", function(event) {
+  serviceToken = $("#service-token")[0].value;
+});
+
+
 ws.onmessage = function(message) {
-  var data = JSON.parse(message.data);
-  $("#chat-text").append("<div class='panel panel-default'><div class='panel-heading'>" + data.handle + "</div><div class='panel-body'>" + data.text + "</div></div>");
+  print(message)
+  storeDatum(JSON.parse(message.data))
+  $("#chat-text").html("");
+  var filterdData = filterdData()
+  for (key in filterdData) {
+    var datum = filterdData[key]
+    $("#chat-text").append("<div class='panel panel-default'><div class='panel-heading'>" + key + "</div><div class='panel-body'>" + datum.major + "</div></div>");
+  }
+
   $("#chat-text").stop().animate({
     scrollTop: $('#chat-text')[0].scrollHeight
   }, 800);
@@ -16,3 +31,12 @@ $("#input-form").on("submit", function(event) {
   ws.send(JSON.stringify({ handle: handle, text: text }));
   $("#input-text")[0].value = "";
 });
+
+function storeDatum(datum){
+  var majorMinor = String(datum.major) + "-" + String(datum.minor)
+  data[datum.serviceToken][majorMinor] = datum
+}
+
+function filterdData(){
+  return data[serviceToken]
+}
