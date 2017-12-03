@@ -3,13 +3,13 @@ var uri      = scheme + window.document.location.host + "/";
 var ws       = new WebSocket(uri);
 var serviceToken = "";
 var data     = {};
-initializeWebSocket(){
+initializeWebSocket()
 
 
 function reopenWebSocket(){
   uri      = scheme + window.document.location.host + "/";
   ws       = new WebSocket(uri);
-  initializeWebSocket(){
+  initializeWebSocket()
 }
 
 function initializeWebSocket(){
@@ -29,12 +29,16 @@ function initializeWebSocket(){
     }, 800);
   };
 
+  ws.onopen = function(event){
+    console.log("opened!!!!")    
+  }
+
   ws.onclose = function(event){
-    alert("closed!!!!")
-    // reopenWebSocket()
+    console.log("closed!!!!")
+    // setTimeout("reopenWebSocket()", 3000);
   }
   ws.onerror = function(event){
-    alert("error!!!")
+    console.log("error!!!")
   }
 }
 
