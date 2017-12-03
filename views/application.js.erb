@@ -3,26 +3,41 @@ var uri      = scheme + window.document.location.host + "/";
 var ws       = new WebSocket(uri);
 var serviceToken = "";
 var data     = {};
-
-$("#service-token-form").on("submit", function(event) {
-  serviceToken = $("#service-token")[0].value;
-});
+initializeWebSocket(){
 
 
-ws.onmessage = function(message) {
-  print(message)
-  storeDatum(JSON.parse(message.data))
-  $("#chat-text").html("");
-  var filterdData = filterdData()
-  for (key in filterdData) {
-    var datum = filterdData[key]
-    $("#chat-text").append("<div class='panel panel-default'><div class='panel-heading'>" + key + "</div><div class='panel-body'>" + datum.major + "</div></div>");
+function reopenWebSocket(){
+  uri      = scheme + window.document.location.host + "/";
+  ws       = new WebSocket(uri);
+  initializeWebSocket(){
+}
+
+function initializeWebSocket(){
+
+  ws.onmessage = function(message) {
+    print(message)
+    storeDatum(JSON.parse(message.data))
+    $("#chat-text").html("");
+    var filterdData = filterdData()
+    for (key in filterdData) {
+      var datum = filterdData[key]
+      $("#chat-text").append("<div class='panel panel-default'><div class='panel-heading'>" + key + "</div><div class='panel-body'>" + datum.major + "</div></div>");
+    }
+
+    $("#chat-text").stop().animate({
+      scrollTop: $('#chat-text')[0].scrollHeight
+    }, 800);
+  };
+
+  ws.onclose = function(event){
+    alert("closed!!!!")
+    // reopenWebSocket()
   }
+  ws.onerror = function(event){
+    alert("error!!!")
+  }
+}
 
-  $("#chat-text").stop().animate({
-    scrollTop: $('#chat-text')[0].scrollHeight
-  }, 800);
-};
 
 $("#input-form").on("submit", function(event) {
   event.preventDefault();
@@ -31,6 +46,7 @@ $("#input-form").on("submit", function(event) {
   ws.send(JSON.stringify({ handle: handle, text: text }));
   $("#input-text")[0].value = "";
 });
+
 
 function storeDatum(datum){
   var majorMinor = String(datum.major) + "-" + String(datum.minor)
