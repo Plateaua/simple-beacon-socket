@@ -1,15 +1,17 @@
 var scheme   = "<%= @scheme %>";
 var uri      = scheme + window.document.location.host + "/";
 var ws       = new WebSocket(uri);
-var serviceToken = "";
+var serviceToken = "defaultService";
 var data     = {};
 initializeWebSocket()
 
 
 function reopenWebSocket(){
-  uri      = scheme + window.document.location.host + "/";
-  ws       = new WebSocket(uri);
-  initializeWebSocket()
+  if (ws == null) {
+    uri      = scheme + window.document.location.host + "/";
+    ws       = new WebSocket(uri);
+    initializeWebSocket()    
+  }
 }
 
 function initializeWebSocket(){
@@ -18,7 +20,7 @@ function initializeWebSocket(){
     print(message)
     storeDatum(JSON.parse(message.data))
     $("#chat-text").html("");
-    var filterdData = filterdData()
+    var filterdData = filterData()
     for (key in filterdData) {
       var datum = filterdData[key]
       $("#chat-text").append("<div class='panel panel-default'><div class='panel-heading'>" + key + "</div><div class='panel-body'>" + datum.major + "</div></div>");
@@ -35,7 +37,8 @@ function initializeWebSocket(){
 
   ws.onclose = function(event){
     console.log("closed!!!!")
-    // setTimeout("reopenWebSocket()", 3000);
+    ws = null;
+    setTimeout("reopenWebSocket()", 3000);
   }
   ws.onerror = function(event){
     console.log("error!!!")
@@ -51,12 +54,16 @@ $("#input-form").on("submit", function(event) {
   $("#input-text")[0].value = "";
 });
 
-
+var lastDatum;
 function storeDatum(datum){
+  lastDatum = datum
   var majorMinor = String(datum.major) + "-" + String(datum.minor)
+  if (data[datum.serviceToken] == null){
+    data[datum.serviceToken] = {}
+  }
   data[datum.serviceToken][majorMinor] = datum
 }
 
-function filterdData(){
+function filterData(){
   return data[serviceToken]
 }
