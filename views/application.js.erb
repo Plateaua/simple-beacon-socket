@@ -20,16 +20,7 @@ function initializeWebSocket(){
   ws.onmessage = function(message) {
     console.log(message)
     storeDatum(JSON.parse(message.data))
-    $("#chat-text").html("");
-    var filterdData = filterData()
-    for (key in filterdData) {
-      var datum = filterdData[key]
-      $("#chat-text").append("<div class='panel panel-default'><div class='panel-heading'>" + key + "</div><div class='panel-body'>" + "service名：" + datum.serviceToken + "</br>"  + "device名：" + datum.deviceToken + "</br>"  + datum.detectedAt + "</br>" + datum.rssi  + "</br>" + datum.location + "</div></div>");
-    }
-
-    $("#chat-text").stop().animate({
-      scrollTop: $('#chat-text')[0].scrollHeight
-    }, 800);
+    refreshView();
   };
 
   ws.onopen = function(event){
@@ -46,14 +37,25 @@ function initializeWebSocket(){
   }
 }
 
-var lastDatum;
+function refreshView(){
+  $("#chat-text").html("");
+  var filterdData = filterData()
+  for (key in filterdData) {
+    var datum = filterdData[key]
+    $("#chat-text").append("<div class='panel panel-default'><div class='panel-heading'>" + key + "</div><div class='panel-body'>" + "service名：" + datum.serviceToken + "</br>"  + "device名：" + datum.deviceToken + "</br>"  + datum.detectedAt + "</br>" + datum.rssi  + "</br>" + datum.location + "</div></div>");
+  }
+
+  $("#chat-text").stop().animate({
+    scrollTop: $('#chat-text')[0].scrollHeight
+  }, 800);  
+}
+
 function storeDatum(datum){
-  lastDatum = datum
   var majorMinor = String(datum.major) + "-" + String(datum.minor)
   if (data[datum.serviceToken] == null){
     data[datum.serviceToken] = {}
     serviceTokens.push(datum.serviceToken)
-    $("#fileters").append("<button class='btn btn-primary' type='button' onclick='serviceToken = \"" + datum.serviceToken + "\"'>"  + datum.serviceToken +  "</button>");
+    $("#fileters").append("<button class='btn btn-primary' type='button' onclick='serviceToken = \"" + datum.serviceToken + "\";refreshView();'>"  + datum.serviceToken +  "</button>");
   }
   data[datum.serviceToken][majorMinor] = datum
 }
