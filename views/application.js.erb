@@ -23,7 +23,7 @@ function initializeWebSocket(){
     var filterdData = filterData()
     for (key in filterdData) {
       var datum = filterdData[key]
-      $("#chat-text").append("<div class='panel panel-default'><div class='panel-heading'>" + key + "</div><div class='panel-body'>" + datum.detectedAt + "</br>" + datum.rssi  + "</br>" + datum.location + "</div></div>");
+      $("#chat-text").append("<div class='panel panel-default'><div class='panel-heading'>" + key + "</div><div class='panel-body'>" + "device名：" + datum.deviceToken + "</br>"  + datum.detectedAt + "</br>" + datum.rssi  + "</br>" + datum.location + "</div></div>");
     }
 
     $("#chat-text").stop().animate({
