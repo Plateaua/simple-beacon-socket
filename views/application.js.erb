@@ -1,7 +1,7 @@
 var scheme   = "<%= @scheme %>";
 var uri      = scheme + window.document.location.host + "/";
 var ws       = new WebSocket(uri);
-var serviceToken;
+var serviceToken = "";
 var data     = {};
 initializeWebSocket()
 
@@ -56,7 +56,7 @@ function storeDatum(datum){
 }
 
 function filterData(){
-  if (serviceToken == null){
+  if (serviceToken == ""){
     var _data = {}
     for (serviceToken in Object.keys(data)){
       for (datum in data[serviceToken]){
