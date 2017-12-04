@@ -53,7 +53,7 @@ function storeDatum(datum){
   if (data[datum.serviceToken] == null){
     data[datum.serviceToken] = {}
     serviceTokens.push(datum.serviceToken)
-    $("#service-token-form").append("<button class='btn btn-primary' type='submit' onclick='serviceToken = \"" + datum.serviceToken + "\"'>"  + datum.serviceToken +  "</button>");
+    $("#fileters").append("<button class='btn btn-primary' type='button' onclick='serviceToken = \"" + datum.serviceToken + "\"'>"  + datum.serviceToken +  "</button>");
   }
   data[datum.serviceToken][majorMinor] = datum
 }
