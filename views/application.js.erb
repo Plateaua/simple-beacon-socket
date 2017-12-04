@@ -1,7 +1,7 @@
 var scheme   = "<%= @scheme %>";
 var uri      = scheme + window.document.location.host + "/";
 var ws       = new WebSocket(uri);
-var serviceToken = "defaultService";
+var serviceToken;
 var data     = {};
 initializeWebSocket()
 
@@ -45,15 +45,6 @@ function initializeWebSocket(){
   }
 }
 
-
-$("#input-form").on("submit", function(event) {
-  event.preventDefault();
-  var handle = $("#input-handle")[0].value;
-  var text   = $("#input-text")[0].value;
-  ws.send(JSON.stringify({ handle: handle, text: text }));
-  $("#input-text")[0].value = "";
-});
-
 var lastDatum;
 function storeDatum(datum){
   lastDatum = datum
@@ -65,5 +56,16 @@ function storeDatum(datum){
 }
 
 function filterData(){
-  return data[serviceToken]
+  if (serviceToken == null){
+    var _data = {}
+    for (serviceToken in Object.keys(data)){
+      for (datum in data[serviceToken]){
+        var majorMinor = String(datum.major) + "-" + String(datum.minor)
+        _data[majorMinor] = datum
+      }
+    }
+    return data
+  }else{
+    return data[serviceToken]
+  }
 }
