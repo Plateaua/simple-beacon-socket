@@ -17,7 +17,7 @@ function reopenWebSocket(){
 function initializeWebSocket(){
 
   ws.onmessage = function(message) {
-    print(message)
+    console.log(message)
     storeDatum(JSON.parse(message.data))
     $("#chat-text").html("");
     var filterdData = filterData()
