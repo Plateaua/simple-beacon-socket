@@ -2,6 +2,7 @@ var scheme   = "<%= @scheme %>";
 var uri      = scheme + window.document.location.host + "/";
 var ws       = new WebSocket(uri);
 var serviceToken = "";
+var serviceTokens = [];
 var data     = {};
 initializeWebSocket()
 
@@ -51,6 +52,7 @@ function storeDatum(datum){
   var majorMinor = String(datum.major) + "-" + String(datum.minor)
   if (data[datum.serviceToken] == null){
     data[datum.serviceToken] = {}
+    serviceTokens.push(datum.serviceToken)
   }
   data[datum.serviceToken][majorMinor] = datum
 }
@@ -58,13 +60,14 @@ function storeDatum(datum){
 function filterData(){
   if (serviceToken == ""){
     var _data = {}
-    for (serviceToken in Object.keys(data)){
-      for (datum in data[serviceToken]){
+    for (key of Object.keys(data)){
+      for (dataIndex in data[key]){
+        var datum = data[key][dataIndex]
         var majorMinor = String(datum.major) + "-" + String(datum.minor)
         _data[majorMinor] = datum
       }
     }
-    return data
+    return _data
   }else{
     return data[serviceToken]
   }
